@@ -1,20 +1,51 @@
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import Chat from './src/Screens/Chat.js';
+import { useFonts } from 'expo-font';
+import React from 'react';
+import Config from './src/Screens/Config.js';
+import { AppProvider } from './src/Contexts/AppContext.js';
 
-export default function App() {
+const RootStack = createStackNavigator();
+
+const App = () => {
+  const [fontsLoaded] = useFonts({
+    Monocraft: require('./assets/fonts/Monocraft.ttf'),
+  });
+
+  if (!fontsLoaded) return null;
+
+  const myTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: 'black',
+    },
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <AppProvider>
+      <NavigationContainer theme={myTheme}>
+        <RootStack.Navigator>
+          <RootStack.Group>
+            <RootStack.Screen
+              name='Chat'
+              options={{ headerShown: false }}
+              component={Chat}
+            />
+          </RootStack.Group>
+          <RootStack.Group screenOptions={{ presentation: 'modal' }}>
+            <RootStack.Screen
+              options={{ headerShown: false }}
+              name='Config'
+              component={Config}
+            />
+          </RootStack.Group>
+        </RootStack.Navigator>
+      </NavigationContainer>
+    </AppProvider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
