@@ -10,14 +10,14 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import sendMessagePressedImage from '../../assets/buttons/send-message-pressed.png';
-import sendMessageImage from '../../assets/buttons/send-message.png';
+import { useAppContext } from '../Contexts/AppContext';
+import ElevatedButton from './ElevatedButton';
 
 const ChatBottom = ({ chatInstance, setChatHistoryChanged }) => {
   const [actualPrompt, setActualPrompt] = React.useState('');
-  const [isButtonPressIn, setIsButtonPressIn] = React.useState(false);
   const [canSendMessage, setCanSendMessage] = React.useState(false);
   const [isLoadingResponse, setIsLoadingResponse] = React.useState(false);
+  const { appGlobalData, setAppGlobalData } = useAppContext();
 
   React.useEffect(() => {
     // console.log('chatInstance disponível:', chatInstance ? 'true' : 'false');
@@ -42,28 +42,48 @@ const ChatBottom = ({ chatInstance, setChatHistoryChanged }) => {
     }
 
     if (actualPrompt.length) {
-      try {
-        setIsLoadingResponse(true);
-        const promptMessage = actualPrompt;
-        setActualPrompt('');
-        const result = await chatInstance.sendMessage(promptMessage);
-        const response = await result.response;
-        const text = response.text();
+      // try {
+      //   setIsLoadingResponse(true);
+      //   const promptMessage = actualPrompt;
+      //   setActualPrompt('');
+      //   const result = await chatInstance.sendMessage(promptMessage);
+      //   const response = await result.response;
+      //   const text = response.text();
 
-        const promptFeedback = response.promptFeedback;
-        console.log(promptFeedback);
+      //   const promptFeedback = response.promptFeedback;
+      //   console.log(promptFeedback);
 
-        console.log('user:', promptMessage + '\nresponse:', text);
+      //   console.log('user:', promptMessage + '\nresponse:', text);
 
-        setChatHistoryChanged((previousValue) => !previousValue);
-        const newHistory = await chatInstance.getHistory();
-        console.log(newHistory);
-        setIsLoadingResponse(false);
-      } catch (error) {
-        Alert.alert('Erro:', error);
-        console.log('Error:', error);
-        setIsLoadingResponse(false);
-        return;
+      //   setChatHistoryChanged((previousValue) => !previousValue);
+      //   const newHistory = await chatInstance.getHistory();
+      //   console.log(newHistory);
+      //   setIsLoadingResponse(false);
+      // } catch (error) {
+      //   Alert.alert('Erro:', error);
+      //   console.log('Error:', error);
+      //   setIsLoadingResponse(false);
+      //   return;
+      // }
+
+      const promptMessage = actualPrompt;
+      setActualPrompt('');
+      let success = false;
+      while (!success) {
+        try {
+          setIsLoadingResponse(true);
+          await chatInstance.sendMessage(promptMessage);
+          success = true;
+        } catch (error) {
+          console.log(error);
+          ToastAndroid.show(
+            `Mensagem inválida/proibida, tente novamente.`,
+            ToastAndroid.LONG
+          );
+        } finally {
+          setIsLoadingResponse(false);
+          setChatHistoryChanged((chatHistory) => !chatHistory);
+        }
       }
     } else {
       ToastAndroid.show(`Campo de texto vazio.`, ToastAndroid.SHORT);
@@ -72,7 +92,11 @@ const ChatBottom = ({ chatInstance, setChatHistoryChanged }) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/blocks/dirt.png')}
+      source={
+        appGlobalData
+          ? appGlobalData.downTile
+          : require('../../assets/blocks/block_placeholder.png')
+      }
       style={styles.bottom}
       imageStyle={styles.backgroundImage}
     >
@@ -83,25 +107,34 @@ const ChatBottom = ({ chatInstance, setChatHistoryChanged }) => {
           placeholderTextColor='#B1B1B1'
           value={actualPrompt}
           onChangeText={handleTextChange}
+          onSubmitEditing={handleSendMessage}
         />
 
-        <TouchableWithoutFeedback
-          onPressIn={() => setIsButtonPressIn(true)}
-          onPressOut={() => setIsButtonPressIn(false)}
-          onPress={() => handleSendMessage()}
-        >
-          {canSendMessage && !isLoadingResponse ? (
+        {canSendMessage && !isLoadingResponse ? (
+          <ElevatedButton
+            onPressHandler={handleSendMessage}
+            height={48}
+            width={48}
+            borderWidth={3}
+          >
             <Image
-              style={styles.sendMessageImage}
-              source={
-                isButtonPressIn ? sendMessagePressedImage : sendMessageImage
-              }
+              source={require('../../assets/icons/send_message.png')}
+              style={styles.sendMessageIcon}
             />
-          ) : (
-            // Fazer o botão em CSS com imagem no meio (já tenho o ElevatedButton.js)
-            <Text>🥔</Text>
-          )}
-        </TouchableWithoutFeedback>
+          </ElevatedButton>
+        ) : (
+          <ElevatedButton
+            dontAnimate={true}
+            height={48}
+            width={48}
+            borderWidth={3}
+          >
+            <Image
+              source={require('../../assets/icons/loading_spinner.gif')}
+              style={styles.loadingIcon}
+            />
+          </ElevatedButton>
+        )}
       </View>
       <View style={styles.backgroundOverlay}></View>
     </ImageBackground>
@@ -141,9 +174,21 @@ const styles = StyleSheet.create({
     paddingVertical: 9,
     height: 48,
   },
-  sendMessageImage: {
-    height: 48,
-    width: 48,
+  sendMessageIcon: {
+    width: 32,
+    height: 32,
+  },
+  loadingIcon: {
+    // Reticências
+    // width: 26,
+    // height: 4,
+
+    // .gif
+    // width: 31,
+    width: 23.25,
+
+    // height: 34.5,
+    height: 25.875,
   },
 });
 

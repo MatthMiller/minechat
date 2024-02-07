@@ -7,17 +7,30 @@ import ChatBottom from '../Components/ChatBottom';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import safetySettings from '../../safety-settings.js';
 import { useAppContext } from '../Contexts/AppContext.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import entityMap from '../../entity-map.js';
 
 const API_KEY = 'AIzaSyDjS7mk1TBf7CR9ARyruFeu0kS3EAFnFwk';
 
 const Chat = ({ navigation }) => {
   const [chatInstance, setChatInstance] = React.useState(null);
   const [chatHistoryChanged, setChatHistoryChanged] = React.useState(false);
-  const { appGlobalData, setAppGlobalData } = useAppContext();
+  const {
+    appGlobalData,
+    setAppGlobalData,
+    shouldResetContext,
+    setShouldResetContext,
+  } = useAppContext();
 
-  console.log('appGlobalData', appGlobalData);
+  // console.log('appGlobalData', appGlobalData);
 
   const startChat = async () => {
+    const hasSelectedEntity = await AsyncStorage.getItem('selected-entity');
+
+    if (!hasSelectedEntity?.length || hasSelectedEntity === null) {
+      await AsyncStorage.setItem('selected-entity', '2');
+    }
+
     const genAI = new GoogleGenerativeAI(API_KEY);
     const model = genAI.getGenerativeModel({
       model: 'gemini-pro',
@@ -41,36 +54,81 @@ const Chat = ({ navigation }) => {
     });
     setChatInstance(chat);
 
-    const newMessage =
-      'Aja como um Creeper (mob do Minecraft) e assistente virtual. A partir de agora você está falando com um usuário/cliente. Dê saudações para que o usuário siga com a conversa. Seja breve em sua resposta.';
-    try {
-      const result = await chat.sendMessage(newMessage);
-      const response = await result.response;
-      console.log(response.candidates);
-      // Remove *, **, e deixa apenas uma quebra de linha por vez
-      const text = response.text().replace(/\*\*|\*/g, '');
-      // .replace(/(\n{2,})/g, '\n');
-      const promptFeedback = response.promptFeedback;
-      console.log(text);
-      console.log(promptFeedback);
+    // do AsyncStorage
+    const selectedEntityId = await AsyncStorage.getItem('selected-entity');
+    // Se tiver no estado global usar dele. Senão, do AsyncStorage
+    const entity = appGlobalData
+      ? appGlobalData
+      : entityMap.filter((actualEntity) => {
+          return actualEntity.id === Number(selectedEntityId);
+        })[0];
+    setAppGlobalData(entity);
+    const newMessage = entity.prompt;
 
-      setChatHistoryChanged((chatHistory) => !chatHistory);
-    } catch (error) {
-      Alert.alert('Erro:', error);
-      console.log('Error:', error);
+    // try {
+    //   const result = await chat.sendMessage(newMessage);
+    //   const response = await result.response;
+    //   // console.log(response.candidates); DEBUG
+    //   // Remove *, **, e deixa apenas uma quebra de linha por vez
+    //   const text = response.text().replace(/\*\*|\*/g, '');
+    //   const promptFeedback = response.promptFeedback;
+    //   // console.log(text); DEBUG
+    //   // console.log(promptFeedback); DEBUG
+
+    //   setChatHistoryChanged((chatHistory) => !chatHistory);
+    // } catch (error) {
+    //   Alert.alert('Erro:', error);
+    //   console.log('Error:', error);
+    //   return;
+    // }
+
+    let success = false;
+    while (!success) {
+      try {
+        await chat.sendMessage(newMessage);
+        success = true;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setChatHistoryChanged((chatHistory) => !chatHistory);
+      }
     }
   };
 
   React.useEffect(() => {
-    console.log('first render App useEffect');
     startChat();
+    const focusReference = navigation.addListener('focus', () => {
+      setChatHistoryChanged((previousValue) => !previousValue);
+      console.log('Caiu aqui?', shouldResetContext);
+      // if (shouldResetContext) {
+      // startChat();
+      // setShouldResetContext(false);
+      // }
+    });
+    return focusReference; // removed on unmount
   }, []);
 
   React.useEffect(() => {
-    if (chatInstance !== null) {
-      console.log('Carregou a instância do chat, pode enviar mensagens');
+    console.log('shouldReset no chat:', shouldResetContext);
+    startChat();
+
+    if (shouldResetContext) {
+      setShouldResetContext(false);
     }
-  }, [chatInstance]);
+  }, [shouldResetContext]);
+
+  // React.useEffect(() => {
+  //   if (chatInstance !== null) {
+  //     setCanGlobalUpdate(chatInstance);
+  //   }
+  // }, [chatInstance]);
+
+  React.useEffect(() => {
+    if (chatInstance && appGlobalData) {
+      console.log('Mudou o appGlobalData');
+      startChat();
+    }
+  }, [appGlobalData]);
 
   return (
     <>

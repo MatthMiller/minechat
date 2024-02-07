@@ -9,17 +9,30 @@ import {
 } from 'react-native';
 import menuButtonPressedImage from '../../assets/buttons/menu-button-pressed.png';
 import menuButtonImage from '../../assets/buttons/menu-button.png';
+import { useAppContext } from '../Contexts/AppContext';
+import ElevatedButton from './ElevatedButton';
 
 const ChatHeader = ({ navigation }) => {
   const [isButtonPressIn, setIsButtonPressIn] = React.useState(false);
+  const { appGlobalData, setAppGlobalData } = useAppContext();
 
   const handleOpenModal = () => {
     navigation.navigate('Config');
   };
 
+  // React.useEffect(() => {
+  //   if (appGlobalData) {
+  //     console.log(appGlobalData);
+  //   }
+  // }, [appGlobalData]);
+
   return (
     <ImageBackground
-      source={require('../../assets/blocks/mossy_cobblestone.png')}
+      source={
+        appGlobalData
+          ? appGlobalData.topTile
+          : require('../../assets/blocks/block_placeholder.png')
+      }
       style={styles.header}
       imageStyle={styles.backgroundImage}
     >
@@ -29,23 +42,29 @@ const ChatHeader = ({ navigation }) => {
           source={require('../../assets/blocks/item_frame.png')}
           imageStyle={styles.entityHeadItemFrameImage}
         >
-          <Image
+          {appGlobalData ? (
+            <Image style={styles.headImage} source={appGlobalData.head}></Image>
+          ) : null}
+          {/* <Image
             style={styles.headImage}
             source={require('../../assets/heads/creeper.png')}
-          ></Image>
+          ></Image> */}
         </ImageBackground>
-        <Text style={styles.entityName}>Creeper IA</Text>
+        <Text style={styles.entityName}>
+          {appGlobalData ? appGlobalData.name : 'Carregando...'}
+        </Text>
       </View>
-      <TouchableWithoutFeedback
-        onPressIn={() => setIsButtonPressIn(true)}
-        onPressOut={() => setIsButtonPressIn(false)}
-        onPress={handleOpenModal}
+      <ElevatedButton
+        height={48}
+        width={48}
+        onPressHandler={handleOpenModal}
+        borderWidth={3}
       >
         <Image
-          style={styles.menuButtonImage}
-          source={isButtonPressIn ? menuButtonPressedImage : menuButtonImage}
+          source={require('../../assets/icons/menu.png')}
+          style={styles.menuIcon}
         />
-      </TouchableWithoutFeedback>
+      </ElevatedButton>
     </ImageBackground>
   );
 };
@@ -85,9 +104,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
-  menuButtonImage: {
-    width: 48,
-    height: 48,
+  menuIcon: {
+    width: 24,
+    height: 19,
   },
 });
 

@@ -12,16 +12,34 @@ import {
 } from 'react-native';
 import entityMap from '../../entity-map';
 import ElevatedButton from './ElevatedButton';
+import { useAppContext } from '../Contexts/AppContext';
 
 const ConfigContent = () => {
   const [selectedEntity, setSelectedEntity] = React.useState({});
   const [hoverEntity, setHoverEntity] = React.useState(null);
+  const { appGlobalData, setAppGlobalData, setShouldResetContext } =
+    useAppContext();
 
-  const showAlert = (name) => {
+  const showEntityAlert = (name) => {
     ToastAndroid.show(
       `Personagem ${name} selecionado com sucesso.`,
       ToastAndroid.LONG
     );
+  };
+
+  const showResetContextAlert = () => {
+    ToastAndroid.show(`Contexto reiniciado.`, ToastAndroid.LONG);
+  };
+
+  React.useEffect(() => {
+    setSelectedEntity(appGlobalData);
+  }, []);
+
+  const handleResetContext = () => {
+    if (appGlobalData) {
+      setShouldResetContext(true);
+      showResetContextAlert();
+    }
   };
 
   const handleOpenURL = async () => {
@@ -30,8 +48,13 @@ const ConfigContent = () => {
 
   const EntityListItem = ({ item, index }) => {
     const handleSelectEntity = () => {
-      showAlert(item.name);
       setSelectedEntity(item);
+
+      // A terceira condição é nova
+      if (appGlobalData && selectedEntity && item.id !== appGlobalData.id) {
+        setAppGlobalData(item);
+        showEntityAlert(item.name);
+      }
     };
 
     return (
@@ -81,7 +104,9 @@ const ConfigContent = () => {
             <View style={entitiesStyles.middle}>
               <View style={entitiesStyles.middleLineUp}></View>
               <View style={entitiesStyles.middleContent}>
-                <FlatList data={entityMap} renderItem={EntityListItem} />
+                {selectedEntity ? (
+                  <FlatList data={entityMap} renderItem={EntityListItem} />
+                ) : null}
               </View>
               <View style={entitiesStyles.middleLineDown}></View>
             </View>
@@ -91,7 +116,15 @@ const ConfigContent = () => {
             </View>
           </View>
 
-          <ElevatedButton borderWidth={3} height={58}>
+          {/* FAZER função de callback
+          reinicia o estado global e seta o storage
+          para o bichinho selecionado (mesma coisa que clicar de novo)
+          */}
+          <ElevatedButton
+            onPressHandler={handleResetContext}
+            borderWidth={3}
+            height={58}
+          >
             <Text style={styles.buttonText}>Reiniciar contexto</Text>
           </ElevatedButton>
         </View>

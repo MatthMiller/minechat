@@ -8,6 +8,8 @@ const ElevatedButton = ({
   borderWidth,
   paddingVertical,
   paddingHorizontal,
+  dontAnimate,
+  onPressHandler,
 }) => {
   const [isButtonPressIn, setIsButtonPressIn] = React.useState(false);
 
@@ -28,7 +30,7 @@ const ElevatedButton = ({
     },
     leftLineUp: {
       flex: 1,
-      backgroundColor: isButtonPressIn ? '#4A484B' : '#F7F7F7',
+      backgroundColor: isButtonPressIn && !dontAnimate ? '#4A484B' : '#F7F7F7',
     },
     leftLinePixel: {
       height: 2,
@@ -39,16 +41,16 @@ const ElevatedButton = ({
     },
     middleLineUp: {
       height: 2,
-      backgroundColor: isButtonPressIn ? '#4A484B' : '#F7F7F7',
+      backgroundColor: isButtonPressIn && !dontAnimate ? '#4A484B' : '#F7F7F7',
     },
     middleContent: {
       flex: 1,
-      backgroundColor: isButtonPressIn ? '#8B8B8B' : '#C6C6C6',
+      backgroundColor: isButtonPressIn && !dontAnimate ? '#8B8B8B' : '#C6C6C6',
       justifyContent: 'center',
       alignItems: 'center',
     },
     middleLineDown: {
-      backgroundColor: isButtonPressIn ? '#F7F7F7' : '#4A484B',
+      backgroundColor: isButtonPressIn && !dontAnimate ? '#F7F7F7' : '#4A484B',
       height: 2,
     },
     rightLine: {
@@ -60,7 +62,7 @@ const ElevatedButton = ({
     },
     rightLineDown: {
       flex: 1,
-      backgroundColor: isButtonPressIn ? '#F7F7F7' : '#4A484B',
+      backgroundColor: isButtonPressIn && !dontAnimate ? '#F7F7F7' : '#4A484B',
     },
   });
 
@@ -68,6 +70,11 @@ const ElevatedButton = ({
     <TouchableWithoutFeedback
       onPressIn={() => setIsButtonPressIn(true)}
       onPressOut={() => setIsButtonPressIn(false)}
+      onPress={() => {
+        if (onPressHandler) {
+          onPressHandler();
+        }
+      }}
     >
       <View style={styles.wrapper}>
         <View style={styles.leftLine}>

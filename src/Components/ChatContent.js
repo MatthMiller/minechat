@@ -7,12 +7,14 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useAppContext } from '../Contexts/AppContext';
 
 const ChatContent = ({ chatHistoryChanged, chatInstance }) => {
   const [localHistory, setLocalHistory] = React.useState([]);
+  const { appGlobalData, setAppGlobalData } = useAppContext();
 
   const Message = ({ item, index }, props) => {
-    console.log(item, index, props);
+    // console.log(item, index, props);
 
     if (item.role === 'model') {
       return (
@@ -26,11 +28,10 @@ const ChatContent = ({ chatHistoryChanged, chatInstance }) => {
                 : styles.messageTop
             }
           >
-            <Image
-              source={require('../../assets/heads/creeper.png')}
-              style={styles.messageHead}
-            />
-            <Text style={styles.messageAuthor}>Creeper IA</Text>
+            <Image source={appGlobalData.head} style={styles.messageHead} />
+            <Text style={styles.messageAuthor}>
+              {appGlobalData.name + ' IA'}
+            </Text>
           </View>
           <Text style={styles.messageContent}>
             {item.parts[0].text.replace(/\*\*|\*/g, '')}
@@ -55,9 +56,9 @@ const ChatContent = ({ chatHistoryChanged, chatInstance }) => {
     return <Text key={'erro'}>Erro no ChatContent.js</Text>;
   };
 
-  React.useEffect(() => {
-    console.log('chatHistoryChanged', chatHistoryChanged);
-  }, [chatHistoryChanged]);
+  // React.useEffect(() => {
+  //   console.log('chatHistoryChanged', chatHistoryChanged);
+  // }, [chatHistoryChanged]);
 
   React.useEffect(() => {
     console.log('chatInstance no ChatContent.js?', chatInstance);
@@ -75,24 +76,33 @@ const ChatContent = ({ chatHistoryChanged, chatInstance }) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/backgrounds/stone-background.png')}
+      source={
+        appGlobalData
+          ? appGlobalData.background
+          : require('../../assets/backgrounds/stone.png')
+      }
       style={styles.chat}
       imageStyle={styles.backgroundImage}
     >
       <View style={styles.backgroundOverlay}></View>
 
-      {localHistory?.length ? (
+      {localHistory?.length && appGlobalData ? (
         <FlatList
           data={[...localHistory].reverse()}
           style={styles.flatList}
           renderItem={Message}
-          keyExtractor={(item) => item.index}
+          keyExtractor={(item, index) => index}
           inverted={true} // Torna a ordem reversa
         />
       ) : (
-        <Text>Sem nada no histórico...</Text>
+        <View style={styles.loadingContainer}>
+          <Image
+            source={require('../../assets/icons/loading_spinner.gif')}
+            style={styles.gif}
+          />
+          <Text style={styles.loadingText}>Carregando</Text>
+        </View>
       )}
-
       {/* Gambiarra pra renderizar o componente
       de novo depois de atualizar esse state
       no ChatBottom.js */}
@@ -100,12 +110,6 @@ const ChatContent = ({ chatHistoryChanged, chatInstance }) => {
     </ImageBackground>
   );
 };
-
-// 🐣🐔
-// 🐣🐔 PROXIMA ETAPA:
-// 🐣🐔 escrever no entity-map os mobs.
-// 🐣🐔 conseguir enviar mensagem, usar a instancia do chat no estado (ja existe)
-// 🐣🐔 pra dar o sendmessage
 
 const styles = StyleSheet.create({
   chat: {
@@ -156,6 +160,23 @@ const styles = StyleSheet.create({
   messageHead: {
     height: 24,
     width: 24,
+  },
+  loadingContainer: {
+    flex: 1,
+    // Centraliza o spinner
+    justifyContent: 'center',
+    gap: 16,
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontFamily: 'Monocraft',
+    fontSize: 16,
+    lineHeight: 16,
+    color: '#F5F5F5',
+  },
+  gif: {
+    height: 51.75,
+    width: 46.5,
   },
 });
 
