@@ -2,11 +2,17 @@
 
 O projeto Minechat é um aplicativo móvel desenvolvido com React Native e Expo, projetado para oferecer uma experiência de chat interativa com vários personagens do jogo Minecraft, através do uso de inteligência artificial.
 
-### Versão 1.0 para Android: <a href="">download do aplicativo</a>
+### Versão 1.0 para Android: <a href="https://www.dropbox.com/scl/fi/4lpjlez29lusjms0q8guc/minechat_v1_0.apk?rlkey=vp5d2qfxdqpjoth8g6thl7la6&dl=1">download do aplicativo</a>
 
-|              Chat                        |               Configurações                |
-| ---------------------------------------- | ----------------------------------------   |
-| ![Chat](./screenshots/chat.png)          | ![Configurações](./screenshots/config.png) |
+<br>
+<h2 align = "center">Screenshots dentro do app</h2> 
+
+<p align="center" style="display: flex;">
+  <img height="600" src='./screenshots/chat.png' alt="Chat" />
+  <img height="600" src='./screenshots/config.png' alt="Configurações" />
+</p>
+
+<br>
 
 ## Personagens disponíveis
 
@@ -27,7 +33,9 @@ O projeto Minechat é um aplicativo móvel desenvolvido com React Native e Expo,
 - <div style="display: flex; align-items: center; max-height: max-content"><img height="32px" width="32px" style="place-self: center; max-height: max-content" src='./assets/blocks/end_stone.png'/> <b>End</b></div>
 - <div style="display: flex; align-items: center; max-height: max-content"><img height="32px" width="32px" style="place-self: center; max-height: max-content" src='./assets/blocks/soul_sand.png'/> <b>Nether</b></div>
 
-## Para desenvolvedores
+<br>
+
+## <h2>Para desenvolvedores</h2>
 
 ### Instalando módulos
 
@@ -40,3 +48,12 @@ npm install
 ```
 npm run start
 ```
+
+## Tecnologias e bibliotecas utilizadas:
+
+- Figma
+- Android Studio Virtual Device e Logcat
+- React Native e Expo
+- React Navigation
+- Async Storage
+- Google AI - API Gemini
