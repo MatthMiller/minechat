@@ -42,49 +42,19 @@ const ChatBottom = ({ chatInstance, setChatHistoryChanged }) => {
     }
 
     if (actualPrompt.length) {
-      // try {
-      //   setIsLoadingResponse(true);
-      //   const promptMessage = actualPrompt;
-      //   setActualPrompt('');
-      //   const result = await chatInstance.sendMessage(promptMessage);
-      //   const response = await result.response;
-      //   const text = response.text();
-
-      //   const promptFeedback = response.promptFeedback;
-      //   console.log(promptFeedback);
-
-      //   console.log('user:', promptMessage + '\nresponse:', text);
-
-      //   setChatHistoryChanged((previousValue) => !previousValue);
-      //   const newHistory = await chatInstance.getHistory();
-      //   console.log(newHistory);
-      //   setIsLoadingResponse(false);
-      // } catch (error) {
-      //   Alert.alert('Erro:', error);
-      //   console.log('Error:', error);
-      //   setIsLoadingResponse(false);
-      //   return;
-      // }
-
       const promptMessage = actualPrompt;
       setActualPrompt('');
-      let success = false;
-      while (!success) {
-        try {
-          setIsLoadingResponse(true);
-          await chatInstance.sendMessage(promptMessage);
-          success = true;
-        } catch (error) {
-          console.log(error);
-          ToastAndroid.show(
-            `Mensagem inválida/proibida, tente novamente.`,
-            ToastAndroid.LONG
-          );
-        } finally {
-          setIsLoadingResponse(false);
-          setChatHistoryChanged((chatHistory) => !chatHistory);
-        }
+
+      setIsLoadingResponse(true);
+      const result = await chatInstance.sendMessage(promptMessage); // Ele deveria parar aqui
+      const response = await result.response;
+
+      if (response.promptFeedback.blockReason) {
+        ToastAndroid.show(`Mensagem inválida/proibida.`, ToastAndroid.SHORT);
       }
+
+      setIsLoadingResponse(false);
+      setChatHistoryChanged((chatHistory) => !chatHistory);
     } else {
       ToastAndroid.show(`Campo de texto vazio.`, ToastAndroid.SHORT);
     }

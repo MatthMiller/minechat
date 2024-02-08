@@ -22,8 +22,6 @@ const Chat = ({ navigation }) => {
     setShouldResetContext,
   } = useAppContext();
 
-  // console.log('appGlobalData', appGlobalData);
-
   const startChat = async () => {
     const hasSelectedEntity = await AsyncStorage.getItem('selected-entity');
 
@@ -37,17 +35,6 @@ const Chat = ({ navigation }) => {
       safetySettings,
     });
     const chat = model.startChat({
-      // Histórico de mensagens passadas
-      // history: [
-      // {
-      //   role: 'user',
-      //   parts: 'Hello, I have 2 dogs in my house',
-      // },
-      // {
-      //   role: 'model',
-      //   parts: 'Great to meet you. What would you like to know?',
-      // },
-      // ],
       generationConfig: {
         maxOutputTokens: 1000,
       },
@@ -64,23 +51,6 @@ const Chat = ({ navigation }) => {
         })[0];
     setAppGlobalData(entity);
     const newMessage = entity.prompt;
-
-    // try {
-    //   const result = await chat.sendMessage(newMessage);
-    //   const response = await result.response;
-    //   // console.log(response.candidates); DEBUG
-    //   // Remove *, **, e deixa apenas uma quebra de linha por vez
-    //   const text = response.text().replace(/\*\*|\*/g, '');
-    //   const promptFeedback = response.promptFeedback;
-    //   // console.log(text); DEBUG
-    //   // console.log(promptFeedback); DEBUG
-
-    //   setChatHistoryChanged((chatHistory) => !chatHistory);
-    // } catch (error) {
-    //   Alert.alert('Erro:', error);
-    //   console.log('Error:', error);
-    //   return;
-    // }
 
     let success = false;
     while (!success) {

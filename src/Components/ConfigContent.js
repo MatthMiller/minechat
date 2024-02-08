@@ -17,6 +17,7 @@ import { useAppContext } from '../Contexts/AppContext';
 const ConfigContent = () => {
   const [selectedEntity, setSelectedEntity] = React.useState({});
   const [hoverEntity, setHoverEntity] = React.useState(null);
+  const [isSelectionDisabled, setIsSelectionDisabled] = React.useState(false);
   const { appGlobalData, setAppGlobalData, setShouldResetContext } =
     useAppContext();
 
@@ -57,10 +58,23 @@ const ConfigContent = () => {
       }
     };
 
+    const handleTooMuchTouchs = () => {
+      // Impede seleções rápidas
+      if (isSelectionDisabled) {
+        return;
+      }
+      setIsSelectionDisabled(true);
+      handleSelectEntity();
+
+      setTimeout(() => {
+        setIsSelectionDisabled(false);
+      }, 1000);
+    };
+
     return (
       <TouchableOpacity
         activeOpacity={1}
-        onPress={() => handleSelectEntity()}
+        onPress={() => handleTooMuchTouchs()}
         key={index}
         onPressIn={() => setHoverEntity(item.id)}
         onPressOut={() => setHoverEntity(null)}
