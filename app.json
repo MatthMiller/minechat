@@ -22,14 +22,14 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.matthmiller.minechat"
+      "package": "com.matthmiller.minechatbot"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "53ef12fe-a359-4aa9-94ed-3333a914c659"
+        "projectId": "87ffbb6f-6269-46b5-b557-351baeb4e50b"
       }
     }
   }
