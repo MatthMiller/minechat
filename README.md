@@ -4,9 +4,9 @@ O projeto Minechat é um aplicativo móvel desenvolvido com React Native e Expo,
 
 ### Versão 1.0 para Android: <a href="">download do aplicativo</a>
 
-|              Chat               |               Configurações                |
-| :-----------------------------: | :----------------------------------------: |
-| ![Chat](./screenshots/chat.png) | ![Configurações](./screenshots/config.png) |
+|              Chat                        |               Configurações                |
+| ---------------------------------------- | ----------------------------------------   |
+| ![Chat](./screenshots/chat.png)          | ![Configurações](./screenshots/config.png) |
 
 ## Personagens disponíveis
 
