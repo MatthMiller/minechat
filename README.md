@@ -2,7 +2,7 @@
 
 O projeto Minechat é um aplicativo móvel desenvolvido com React Native e Expo, projetado para oferecer uma experiência de chat interativa com vários personagens do jogo Minecraft, através do uso de inteligência artificial.
 
-### Versão 1.0 para Android: <a href="https://www.dropbox.com/scl/fi/4lpjlez29lusjms0q8guc/minechat_v1_0.apk?rlkey=vp5d2qfxdqpjoth8g6thl7la6&dl=1">download do aplicativo</a>
+### Versão 1.0 para Android: <a href="https://www.dropbox.com/scl/fi/w3x7wqtnaympuhzs26kfh/minechat_v1_1.apk?rlkey=gp6tmrl6ziyiybgnwgd2c23ev&dl=1">download do aplicativo</a>
 
 <br>
 <h2 align = "center">Screenshots dentro do app</h2> 
