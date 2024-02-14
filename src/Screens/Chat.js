@@ -9,7 +9,10 @@ import safetySettings from '../../safety-settings.js';
 import { useAppContext } from '../Contexts/AppContext.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import entityMap from '../../entity-map.js';
-import API_KEY from '../../API_KEY.js';
+
+const API_KEY = process.env.EXPO_PUBLIC_API_KEY;
+
+console.log('.env?', process.env.EXPO_PUBLIC_API_KEY);
 
 const Chat = ({ navigation }) => {
   const [chatInstance, setChatInstance] = React.useState(null);
