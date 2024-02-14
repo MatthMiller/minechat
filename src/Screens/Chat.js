@@ -9,8 +9,7 @@ import safetySettings from '../../safety-settings.js';
 import { useAppContext } from '../Contexts/AppContext.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import entityMap from '../../entity-map.js';
-
-const API_KEY = 'AIzaSyDjS7mk1TBf7CR9ARyruFeu0kS3EAFnFwk';
+import API_KEY from '../../API_KEY.js';
 
 const Chat = ({ navigation }) => {
   const [chatInstance, setChatInstance] = React.useState(null);
@@ -52,16 +51,11 @@ const Chat = ({ navigation }) => {
     setAppGlobalData(entity);
     const newMessage = entity.prompt;
 
-    let success = false;
-    while (!success) {
-      try {
-        await chat.sendMessage(newMessage);
-        success = true;
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setChatHistoryChanged((chatHistory) => !chatHistory);
-      }
+    try {
+      await chat.sendMessage(newMessage);
+      setChatHistoryChanged((chatHistory) => !chatHistory);
+    } catch (error) {
+      console.log(error);
     }
   };
 

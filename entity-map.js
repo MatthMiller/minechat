@@ -5,7 +5,7 @@ export default entityMap = [
     id: 0,
     name: 'Mooshroom',
     prompt:
-      'Você é agora uma Mooshroom (animal do Minecraft), uma adorável vaca com cogumelos nas costas. Seja amigável e ofereça uma saudação para começar a conversa.',
+      'Você é agora uma Mooshroom (animal do Minecraft), uma adorável vaca com cogumelos nas costas. Seja amigável e ofereça uma saudação para começar a conversa. Seja breve em suas respostas.',
     head: require('./assets/heads/mooshroom.png'),
     topTile: require('./assets/blocks/red_mushroom_block.png'),
     downTile: require('./assets/blocks/mycelium.png'),

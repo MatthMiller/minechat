@@ -11,7 +11,7 @@ const Config = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ConfigHeader handleBackToChat={handleBackToChat} />
-      <ConfigContent />
+      <ConfigContent handleBackToChat={handleBackToChat} />
     </View>
   );
 };

@@ -14,7 +14,7 @@ import entityMap from '../../entity-map';
 import ElevatedButton from './ElevatedButton';
 import { useAppContext } from '../Contexts/AppContext';
 
-const ConfigContent = () => {
+const ConfigContent = ({ handleBackToChat }) => {
   const [selectedEntity, setSelectedEntity] = React.useState({});
   const [hoverEntity, setHoverEntity] = React.useState(null);
   const [isSelectionDisabled, setIsSelectionDisabled] = React.useState(false);
@@ -40,6 +40,7 @@ const ConfigContent = () => {
     if (appGlobalData) {
       setShouldResetContext(true);
       showResetContextAlert();
+      handleBackToChat();
     }
   };
 
@@ -130,10 +131,6 @@ const ConfigContent = () => {
             </View>
           </View>
 
-          {/* FAZER função de callback
-          reinicia o estado global e seta o storage
-          para o bichinho selecionado (mesma coisa que clicar de novo)
-          */}
           <ElevatedButton
             onPressHandler={handleResetContext}
             borderWidth={3}

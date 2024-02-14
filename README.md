@@ -2,10 +2,8 @@
 
 O projeto Minechat é um aplicativo móvel desenvolvido com React Native e Expo, projetado para oferecer uma experiência de chat interativa com vários personagens do jogo Minecraft, através do uso de inteligência artificial.
 
-### Versão 1.0 para Android: <a href="https://www.dropbox.com/scl/fi/4lpjlez29lusjms0q8guc/minechat_v1_0.apk?rlkey=vp5d2qfxdqpjoth8g6thl7la6&dl=1">download do aplicativo</a>
-
 <br>
-<h2 align = "center">Screenshots dentro do app</h2> 
+<h2 align = "center">Screenshots dentro do app</h2>
 
 <p align="center" style="display: flex;">
   <img height="600" src='./screenshots/chat.png' alt="Chat" />
@@ -36,6 +34,14 @@ O projeto Minechat é um aplicativo móvel desenvolvido com React Native e Expo,
 <br>
 
 ## <h2>Para desenvolvedores</h2>
+
+### Configurando a chave da API
+
+Crie um arquivo chamado `API_KEY.js` na raíz do projeto com sua chave da <a href="https://ai.google.dev/tutorials/web_quickstart?hl=pt-br#set-up-project">API Gemini</a>:
+
+```js
+export default API_KEY = 'AIzaSyCwYpPcI14mVI7pVSYxhD8L-oWnUTXt_2E';
+```
 
 ### Instalando módulos
 
