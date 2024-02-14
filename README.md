@@ -40,7 +40,7 @@ O projeto Minechat é um aplicativo móvel desenvolvido com React Native e Expo,
 Crie um arquivo chamado `API_KEY.js` na raíz do projeto com sua chave da <a href="https://ai.google.dev/tutorials/web_quickstart?hl=pt-br#set-up-project">API Gemini</a>:
 
 ```js
-export default API_KEY = 'AIzaSyCwYpPcI14mVI7pVSYxhD8L-oWnUTXt_2E';
+export default API_KEY = '<SUA_CHAVE>';
 ```
 
 ### Instalando módulos
