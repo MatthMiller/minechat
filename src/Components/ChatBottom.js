@@ -1,13 +1,10 @@
 import React from 'react';
 import {
-  Alert,
   Image,
   ImageBackground,
   StyleSheet,
-  Text,
   TextInput,
   ToastAndroid,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { useAppContext } from '../Contexts/AppContext';
@@ -49,10 +46,17 @@ const ChatBottom = ({ chatInstance, setChatHistoryChanged }) => {
       const result = await chatInstance.sendMessage(promptMessage); // Ele deveria parar aqui
       const response = await result.response;
 
-      if (response.promptFeedback.blockReason) {
-        ToastAndroid.show(`Mensagem inválida/proibida.`, ToastAndroid.SHORT);
+      const finishReason =
+        response.candidates[response.candidates.length - 1].finishReason;
+      // if (finishReason === 'STOP') {
+      //   ToastAndroid.show(`Mensagem inválida/proibida.`, ToastAndroid.SHORT);
+      // }
+      if (finishReason === 'MAX_TOKENS') {
+        ToastAndroid.show(
+          `Acabaram os tokens gratuitos de uso do Gemini.`,
+          ToastAndroid.SHORT
+        );
       }
-
       setIsLoadingResponse(false);
       setChatHistoryChanged((chatHistory) => !chatHistory);
     } else {
